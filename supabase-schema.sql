@@ -104,11 +104,23 @@ CREATE POLICY "Public can view testimonials" ON testimonials FOR SELECT USING (i
 CREATE POLICY "Anyone can insert bookings" ON bookings FOR INSERT WITH CHECK (true);
 
 -- Authenticated users can do everything
-CREATE POLICY "Auth users manage gallery" ON gallery_items FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Auth users manage artists" ON artists FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Auth users manage services" ON services FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Auth users manage bookings" ON bookings FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Auth users manage testimonials" ON testimonials FOR ALL USING (auth.role() = 'authenticated');
+-- NOTE: FOR ALL policies need both USING (for SELECT/UPDATE/DELETE) 
+-- and WITH CHECK (for INSERT/UPDATE) to work correctly
+CREATE POLICY "Auth users manage gallery" ON gallery_items FOR ALL 
+  USING (auth.role() = 'authenticated') 
+  WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Auth users manage artists" ON artists FOR ALL 
+  USING (auth.role() = 'authenticated') 
+  WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Auth users manage services" ON services FOR ALL 
+  USING (auth.role() = 'authenticated') 
+  WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Auth users manage bookings" ON bookings FOR ALL 
+  USING (auth.role() = 'authenticated') 
+  WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Auth users manage testimonials" ON testimonials FOR ALL 
+  USING (auth.role() = 'authenticated') 
+  WITH CHECK (auth.role() = 'authenticated');
 
 -- =============================================
 -- SEED DATA
