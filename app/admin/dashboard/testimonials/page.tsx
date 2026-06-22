@@ -1,37 +1,68 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, X, Star } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase';
 
 interface Testimonial {
-  id: number;
+  id: string;
   client_name: string;
   rating: number;
   review_text: string;
   tattoo_type?: string;
   is_approved: boolean;
+  created_at: string;
 }
 
 export default function TestimonialsManager() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([
-    { id: 1, client_name: "Priya S.", rating: 5, review_text: "Bijay did my mandala sleeve and I am absolutely in love.", tattoo_type: "Mandala Sleeve", is_approved: true },
-    { id: 2, client_name: "Rajan T.", rating: 5, review_text: "Got my Ganesh tattoo here. The team is so welcoming.", tattoo_type: "Ganesh Tattoo", is_approved: false },
-    { id: 3, client_name: "Anisha K.", rating: 5, review_text: "Sunita did my fine line lotus and it's perfect.", tattoo_type: "Fine Line Lotus", is_approved: true },
-  ]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const toggleApproval = (id: number) => {
-    setTestimonials(testimonials.map(t =>
-      t.id === id ? { ...t, is_approved: !t.is_approved } : t
-    ));
-    toast.success("Review status updated");
+  const fetchTestimonials = async () => {
+    const { data, error } = await supabase
+      .from('testimonials')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error) setTestimonials(data || []);
+    else toast.error('Failed to load testimonials');
+    setLoading(false);
   };
 
-  const deleteTestimonial = (id: number) => {
-    if (!confirm("Delete this review?")) return;
-    setTestimonials(testimonials.filter(t => t.id !== id));
-    toast.success("Review deleted");
+  useEffect(() => { fetchTestimonials(); }, []);
+
+  const toggleApproval = async (id: string, currentApproved: boolean) => {
+    const { error } = await supabase
+      .from('testimonials')
+      .update({ is_approved: !currentApproved })
+      .eq('id', id);
+
+    if (!error) {
+      toast.success('Review status updated');
+      fetchTestimonials();
+    } else {
+      toast.error('Failed to update review');
+    }
   };
+
+  const deleteTestimonial = async (id: string) => {
+    if (!confirm('Delete this review?')) return;
+
+    const { error } = await supabase
+      .from('testimonials')
+      .delete()
+      .eq('id', id);
+
+    if (!error) {
+      toast.success('Review deleted');
+      fetchTestimonials();
+    } else {
+      toast.error('Failed to delete review');
+    }
+  };
+
+  if (loading) return <div className="py-20 text-center">Loading testimonials...</div>;
 
   return (
     <div>
@@ -60,18 +91,18 @@ export default function TestimonialsManager() {
             </div>
 
             <div className="mt-5 text-lg font-body-serif tracking-tight leading-snug text-cream/90">
-              “{testimonial.review_text}”
+              &ldquo;{testimonial.review_text}&rdquo;
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button 
-                onClick={() => toggleApproval(testimonial.id)}
+              <button
+                onClick={() => toggleApproval(testimonial.id, testimonial.is_approved)}
                 className="btn-outline-gold text-sm flex items-center gap-2"
               >
                 {testimonial.is_approved ? <X size={16} /> : <Check size={16} />}
                 {testimonial.is_approved ? 'Hide' : 'Approve & Publish'}
               </button>
-              <button 
+              <button
                 onClick={() => deleteTestimonial(testimonial.id)}
                 className="px-5 py-2 text-sm text-red-400 hover:bg-red-950/30 rounded-xl flex items-center gap-2"
               >
@@ -80,6 +111,12 @@ export default function TestimonialsManager() {
             </div>
           </div>
         ))}
+
+        {testimonials.length === 0 && (
+          <div className="card-dark p-8 text-center text-muted">
+            No testimonials yet. Reviews submitted by clients will appear here.
+          </div>
+        )}
       </div>
     </div>
   );
