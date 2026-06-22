@@ -39,7 +39,6 @@ export default function AboutPage() {
             {[
               { icon: "🎨", title: "Artistry", desc: "Every tattoo is treated as a work of art — never rushed, always intentional." },
               { icon: "🧪", title: "Hygiene", desc: "Medical-grade sterilization, single-use needles, and a sterile environment." },
-              { icon: "🌈", title: "Inclusivity", desc: "LGBTQ+ friendly studio where everyone is welcome and respected." },
               { icon: "🏆", title: "Excellence", desc: "Award-winning artists recognized at the Nepal Tattoo Convention." },
             ].map((value, i) => (
               <div key={i} className="card-dark p-8 text-center">

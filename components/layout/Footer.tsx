@@ -72,8 +72,6 @@ export default function Footer() {
         <div className="mt-16 pt-8 border-t border-gold/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted">
           <div>© {new Date().getFullYear()} Tattoo Biz Butwal. All Rights Reserved.</div>
           <div className="flex gap-4">
-            <span>LGBTQ+ Friendly</span>
-            <span>•</span>
             <span>Nepal Tattoo Convention Artist</span>
           </div>
         </div>

@@ -13,34 +13,40 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
+        getAll() {
+          return request.cookies.getAll();
         },
-        set(name: string, value: string, options: any) {
-          response.cookies.set({ name, value, ...options });
-        },
-        remove(name: string, options: any) {
-          response.cookies.set({ name, value: '', ...options });
+        setAll(cookiesToSet) {
+          // Write any refreshed auth cookies back onto both the request
+          // (so getUser below sees them) and the response (so the browser
+          // stores them). This handles Supabase's chunked auth cookies.
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          );
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
         },
       },
     }
   );
 
+  // Use getUser() (not getSession()) in server code: it revalidates the token
+  // with Supabase and also refreshes it, keeping the cookie session alive.
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
 
-  // If trying to access protected admin routes without session
-  if (pathname.startsWith('/admin/dashboard')) {
-    if (!session) {
-      return NextResponse.redirect(new URL('/admin', request.url));
-    }
+  // Protect dashboard routes: no authenticated user -> back to login.
+  if (pathname.startsWith('/admin/dashboard') && !user) {
+    return NextResponse.redirect(new URL('/admin', request.url));
   }
 
-  // If already logged in and trying to access login page
-  if (pathname === '/admin' && session) {
+  // Already logged in and visiting the login page -> go to dashboard.
+  if (pathname === '/admin' && user) {
     return NextResponse.redirect(new URL('/admin/dashboard', request.url));
   }
 
