@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Phone, MessageCircle } from 'lucide-react';
+import { Phone, MessageCircle, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
 
@@ -38,6 +38,17 @@ export default function BookingsManager() {
     if (!error) {
       toast.success(`Status updated to ${newStatus}`);
       fetchBookings();
+    }
+  };
+
+  const deleteBooking = async (id: string) => {
+    if (!confirm('Delete this booking request permanently?')) return;
+    const { error } = await supabase.from('bookings').delete().eq('id', id);
+    if (!error) {
+      toast.success('Booking deleted');
+      fetchBookings();
+    } else {
+      toast.error('Failed to delete booking');
     }
   };
 
@@ -127,6 +138,13 @@ export default function BookingsManager() {
                       >
                         <MessageCircle className="w-4 h-4 text-emerald-400" />
                       </a>
+                      <button
+                        onClick={() => deleteBooking(booking.id)}
+                        title="Delete booking"
+                        className="p-2 bg-dark3 rounded-lg hover:bg-red-900/30 transition"
+                      >
+                        <Trash2 className="w-4 h-4 text-red-400" />
+                      </button>
                     </div>
                   </td>
                 </tr>

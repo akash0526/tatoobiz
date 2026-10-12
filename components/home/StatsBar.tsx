@@ -1,13 +1,14 @@
 'use client';
 
-import { STUDIO_INFO } from '@/lib/constants';
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 
 export default function StatsBar() {
+  const { settings } = useSiteSettings();
   const stats = [
-    { number: STUDIO_INFO.years, label: "YEARS" },
-    { number: STUDIO_INFO.clients, label: "CLIENTS" },
-    { number: `${STUDIO_INFO.googleRating}★`, label: "GOOGLE" },
-    { number: STUDIO_INFO.artists, label: "ARTISTS" },
+    { number: settings.stats.years, label: "YEARS" },
+    { number: settings.stats.clients, label: "CLIENTS" },
+    { number: `${settings.stats.googleRating}★`, label: "GOOGLE" },
+    { number: settings.stats.artists, label: "ARTISTS" },
   ];
 
   return (

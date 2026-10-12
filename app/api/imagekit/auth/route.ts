@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import imagekit from "@/lib/imagekit";
+import { getAdminUser, unauthorized } from "@/lib/auth-server";
 
+// Issues short-lived upload credentials. Only signed-in admins may upload.
 export async function GET() {
+	const admin = await getAdminUser();
+	if (!admin) return unauthorized();
+
 	try {
 		const authParams = imagekit.getAuthenticationParameters();
 

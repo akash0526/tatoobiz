@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { STUDIO_INFO } from '@/lib/constants';
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 
 export default function AboutPreview() {
+  const { settings } = useSiteSettings();
   return (
     <section className="section bg-dark">
       <div className="container-custom">
@@ -15,7 +16,7 @@ export default function AboutPreview() {
               <div className="absolute inset-0 bg-[radial-gradient(#c9a84c_0.8px,transparent_1px)] bg-[length:4px_4px] opacity-10" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-gold text-8xl font-heading tracking-[-4px] mb-1">2016</div>
+                  <div className="text-gold text-8xl font-heading tracking-[-4px] mb-1">{settings.studio.founded}</div>
                   <div className="text-xs tracking-[4px] text-cream/50">ESTABLISHED IN BUTWAL</div>
                 </div>
               </div>
@@ -25,8 +26,8 @@ export default function AboutPreview() {
             <div className="absolute -bottom-4 -right-4 bg-black border border-gold/40 px-5 py-2 rounded-2xl flex items-center gap-3">
               <div className="text-gold text-sm">🏆</div>
               <div>
-                <div className="font-medium text-xs tracking-wider">NEPAL TATTOO CONVENTION</div>
-                <div className="text-[10px] text-muted">Featured Artist</div>
+                <div className="font-medium text-xs tracking-wider">{settings.home.aboutBadgeTitle}</div>
+                <div className="text-[10px] text-muted">{settings.home.aboutBadgeSubtitle}</div>
               </div>
             </div>
           </div>
@@ -37,8 +38,7 @@ export default function AboutPreview() {
             <h2 className="section-title tracking-[-1.5px] mb-6 leading-none">Rooted in Art.<br />Born from Passion.</h2>
             
             <div className="text-lg text-cream/90 font-body-serif leading-tight tracking-tight mb-8">
-              Since 2016, Tattoo Biz has been the premier destination for sacred, meaningful tattoos in Nepal. 
-              We specialize in Hindu mythology, mandalas, and fine line work — creating timeless art on skin.
+              {settings.home.aboutText}
             </div>
 
             {/* Features */}

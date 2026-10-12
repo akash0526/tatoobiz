@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
-import { STUDIO_INFO, SOCIAL_LINKS, STYLES, ARTISTS_LIST } from '@/lib/constants';
+import { STYLES, ARTISTS_LIST } from '@/lib/constants';
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 import { toast } from 'sonner';
 
 interface BookingForm {
@@ -18,6 +19,7 @@ interface BookingForm {
 }
 
 export default function ContactPage() {
+  const { settings, links } = useSiteSettings();
   const [formData, setFormData] = useState<BookingForm>({
     name: '', phone: '', email: '', style: '', preferred_artist: '', 
     body_part: '', design_idea: '', preferred_date: '', message: ''
@@ -52,7 +54,7 @@ export default function ContactPage() {
         description: "You can also message us on WhatsApp.",
         action: {
           label: "Open WhatsApp",
-          onClick: () => window.open(SOCIAL_LINKS.whatsapp, '_blank')
+          onClick: () => window.open(links.whatsapp, '_blank')
         }
       });
 
@@ -94,7 +96,7 @@ export default function ContactPage() {
                     <MapPin className="text-gold mt-1 flex-shrink-0" size={20} />
                     <div>
                       <div className="text-gold text-xs tracking-[2px]">LOCATION</div>
-                      <div className="mt-1 text-cream/90">{STUDIO_INFO.location}</div>
+                      <div className="mt-1 text-cream/90">{settings.studio.location}</div>
                     </div>
                   </div>
 
@@ -102,8 +104,8 @@ export default function ContactPage() {
                     <Phone className="text-gold mt-1 flex-shrink-0" size={20} />
                     <div>
                       <div className="text-gold text-xs tracking-[2px]">CALL US</div>
-                      <a href={`tel:${STUDIO_INFO.phone}`} className="mt-1 block hover:text-gold transition-colors">{STUDIO_INFO.phone}</a>
-                      <a href={SOCIAL_LINKS.whatsapp} target="_blank" className="mt-px block text-sm text-cream/70 hover:text-gold">+977 98570 89950 (WhatsApp)</a>
+                      <a href={`tel:${settings.studio.phone}`} className="mt-1 block hover:text-gold transition-colors">{settings.studio.phone}</a>
+                      <a href={links.whatsapp} target="_blank" className="mt-px block text-sm text-cream/70 hover:text-gold">{settings.studio.whatsappDisplay} (WhatsApp)</a>
                     </div>
                   </div>
 
@@ -111,7 +113,7 @@ export default function ContactPage() {
                     <Mail className="text-gold mt-1 flex-shrink-0" size={20} />
                     <div>
                       <div className="text-gold text-xs tracking-[2px]">EMAIL</div>
-                      <a href={`mailto:${STUDIO_INFO.email}`} className="mt-1 block hover:text-gold transition-colors">{STUDIO_INFO.email}</a>
+                      <a href={`mailto:${settings.studio.email}`} className="mt-1 block hover:text-gold transition-colors">{settings.studio.email}</a>
                     </div>
                   </div>
 
@@ -131,9 +133,9 @@ export default function ContactPage() {
                 <div className="mt-10 pt-8 border-t border-gold/10">
                   <div className="text-gold text-xs tracking-[2.5px] mb-3">FOLLOW US</div>
                   <div className="flex gap-5 text-sm">
-                    <a href={SOCIAL_LINKS.instagram} target="_blank" className="hover:text-gold">Instagram</a>
-                    <a href={SOCIAL_LINKS.facebook} target="_blank" className="hover:text-gold">Facebook</a>
-                    <a href={SOCIAL_LINKS.tiktok} target="_blank" className="hover:text-gold">TikTok</a>
+                    <a href={links.instagram} target="_blank" className="hover:text-gold">Instagram</a>
+                    <a href={links.facebook} target="_blank" className="hover:text-gold">Facebook</a>
+                    <a href={links.tiktok} target="_blank" className="hover:text-gold">TikTok</a>
                   </div>
                 </div>
 
@@ -219,7 +221,7 @@ export default function ContactPage() {
 
                 <div className="mt-7 pt-6 border-t border-gold/10 text-center">
                   <div className="text-xs text-muted tracking-wider">PREFER WHATSAPP?</div>
-                  <a href={SOCIAL_LINKS.whatsapp} target="_blank" className="mt-3 inline-block btn-whatsapp">MESSAGE US DIRECTLY ON WHATSAPP</a>
+                  <a href={links.whatsapp} target="_blank" className="mt-3 inline-block btn-whatsapp">MESSAGE US DIRECTLY ON WHATSAPP</a>
                 </div>
               </div>
             </div>

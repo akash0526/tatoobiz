@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 import { MessageCircle, User } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -17,6 +17,7 @@ interface Artist {
 }
 
 export default function ArtistsPage() {
+  const { settings, links } = useSiteSettings();
 	const [artists, setArtists] = useState<Artist[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -159,7 +160,7 @@ export default function ArtistsPage() {
 							We're always looking for passionate artists.
 						</div>
 						<a
-							href={SOCIAL_LINKS.whatsapp}
+							href={links.whatsapp}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="mt-7 inline-block btn-gold"

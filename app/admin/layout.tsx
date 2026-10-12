@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
-  LayoutDashboard, Image, Users, Scissors, Calendar, Star, LogOut 
+  LayoutDashboard, Image, Users, Scissors, Calendar, Star, LogOut, Settings 
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -16,11 +16,23 @@ const navItems = [
   { href: '/admin/dashboard/services', label: 'Services', icon: Scissors },
   { href: '/admin/dashboard/bookings', label: 'Bookings', icon: Calendar },
   { href: '/admin/dashboard/testimonials', label: 'Testimonials', icon: Star },
+  { href: '/admin/dashboard/settings', label: 'Site Settings', icon: Settings },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [userEmail, setUserEmail] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getUser().then(({ data }) => {
+      if (active) setUserEmail(data.user?.email ?? '');
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -85,7 +97,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="text-sm text-muted">Studio Management • Butwal, Nepal</div>
           <div className="flex items-center gap-3 text-sm">
             <div className="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs tracking-wider">LIVE</div>
-            <span className="text-cream/60">tattoobizbutwal@gmail.com</span>
+            <span className="text-cream/60">{userEmail}</span>
           </div>
         </div>
 

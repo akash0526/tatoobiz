@@ -1,8 +1,12 @@
+'use client';
+
 import Link from 'next/link';
-import { NAV_LINKS, STUDIO_INFO, SOCIAL_LINKS } from '@/lib/constants';
+import { NAV_LINKS } from '@/lib/constants';
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 import { Phone, MessageCircle } from 'lucide-react';
 
 export default function Footer() {
+  const { settings, links } = useSiteSettings();
   return (
     <footer className="bg-dark2 border-t border-gold/10 pt-16 pb-8">
       <div className="container-custom">
@@ -15,7 +19,7 @@ export default function Footer() {
               </div>
               <div>
                 <div className="font-heading text-2xl tracking-[-1px] text-cream">TATTOO BIZ</div>
-                <div className="text-[10px] text-gold/70 -mt-1 tracking-[2px]">EST 2016</div>
+                <div className="text-[10px] text-gold/70 -mt-1 tracking-[2px]">EST {settings.studio.founded}</div>
               </div>
             </div>
             <p className="text-muted text-sm max-w-[220px]">
@@ -39,12 +43,12 @@ export default function Footer() {
           <div>
             <div className="text-gold text-xs tracking-[2px] font-medium mb-4">CONTACT</div>
             <div className="space-y-3 text-sm">
-              <div className="text-cream/80">{STUDIO_INFO.location}</div>
-              <a href={`tel:${STUDIO_INFO.phone}`} className="block hover:text-gold transition-colors">{STUDIO_INFO.phone}</a>
-              <a href={SOCIAL_LINKS.whatsapp} target="_blank" className="block hover:text-gold transition-colors flex items-center gap-2">
-                <Phone size={15} /> {STUDIO_INFO.whatsapp}
+              <div className="text-cream/80">{settings.studio.location}</div>
+              <a href={`tel:${settings.studio.phone}`} className="block hover:text-gold transition-colors">{settings.studio.phone}</a>
+              <a href={links.whatsapp} target="_blank" className="block hover:text-gold transition-colors flex items-center gap-2">
+                <Phone size={15} /> {settings.studio.whatsappDisplay}
               </a>
-              <a href={`mailto:${STUDIO_INFO.email}`} className="block hover:text-gold transition-colors">{STUDIO_INFO.email}</a>
+              <a href={`mailto:${settings.studio.email}`} className="block hover:text-gold transition-colors">{settings.studio.email}</a>
             </div>
           </div>
 
@@ -54,7 +58,7 @@ export default function Footer() {
             
             {/* Only WhatsApp remains */}
             <div className="flex gap-4 mb-8">
-              <a href={SOCIAL_LINKS.whatsapp} target="_blank" className="text-cream/70 hover:text-gold transition-colors">
+              <a href={links.whatsapp} target="_blank" className="text-cream/70 hover:text-gold transition-colors">
                 <MessageCircle size={20} />
               </a>
             </div>

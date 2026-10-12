@@ -27,8 +27,16 @@ export default function AdminLogin() {
       }
 
       if (data.session) {
+        // Only accounts on the admin allowlist may use the panel.
+        const { data: isAdmin } = await supabase.rpc('is_admin');
+        if (isAdmin !== true) {
+          await supabase.auth.signOut();
+          toast.error('This account does not have admin access.');
+          return;
+        }
+
         toast.success('Login successful!');
-        
+
         // Force a hard navigation to ensure middleware picks up the session
         window.location.href = '/admin/dashboard';
       }
@@ -69,7 +77,7 @@ export default function AdminLogin() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="input-dark"
-                placeholder="tattoobizbutwal@gmail.com"
+                placeholder="you@example.com"
               />
             </div>
 
@@ -95,7 +103,7 @@ export default function AdminLogin() {
           </form>
 
           <div className="mt-6 text-center text-xs text-muted">
-            Use your Supabase admin account
+            Use an admin account set up in Supabase
           </div>
         </div>
       </div>

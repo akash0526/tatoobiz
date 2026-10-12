@@ -40,13 +40,21 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Protect dashboard routes: no authenticated user -> back to login.
-  if (pathname.startsWith('/admin/dashboard') && !user) {
+  // Being signed in is not enough: the account must be on the admin allowlist
+  // (public.admin_users), checked by the is_admin() database function.
+  let isAdmin = false;
+  if (user) {
+    const { data } = await supabase.rpc('is_admin');
+    isAdmin = data === true;
+  }
+
+  // Protect dashboard routes: not an admin -> back to login.
+  if (pathname.startsWith('/admin/dashboard') && !isAdmin) {
     return NextResponse.redirect(new URL('/admin', request.url));
   }
 
-  // Already logged in and visiting the login page -> go to dashboard.
-  if (pathname === '/admin' && user) {
+  // Already an admin and visiting the login page -> go to dashboard.
+  if (pathname === '/admin' && isAdmin) {
     return NextResponse.redirect(new URL('/admin/dashboard', request.url));
   }
 

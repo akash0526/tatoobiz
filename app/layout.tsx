@@ -9,6 +9,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "sonner";
+import { SiteSettingsProvider } from "@/components/providers/SiteSettingsProvider";
 
 const cinzel = Cinzel({
 	variable: "--font-cinzel",
@@ -61,9 +62,11 @@ export default function RootLayout({
 			className={`${cinzel.variable} ${cinzelDecorative.variable} ${cormorant.variable} ${raleway.variable} antialiased`}
 		>
 			<body className="min-h-screen bg-black text-cream font-ui flex flex-col">
-				<Navbar />
-				<main className="flex-1 pt-20">{children}</main>
-				<Footer />
+				<SiteSettingsProvider>
+					<Navbar />
+					<main className="flex-1 pt-20">{children}</main>
+					<Footer />
+				</SiteSettingsProvider>
 				<Toaster position="top-center" richColors closeButton />
 			</body>
 		</html>

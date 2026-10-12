@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Phone, MapPin } from "lucide-react";
-import { NAV_LINKS, STUDIO_INFO, SOCIAL_LINKS } from "@/lib/constants";
+import { NAV_LINKS } from '@/lib/constants';
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 
 export default function Navbar() {
+  const { settings, links } = useSiteSettings();
 	const [isOpen, setIsOpen] = useState(false);
 	const [scrolled, setScrolled] = useState(false);
 	const pathname = usePathname();
@@ -85,7 +87,7 @@ export default function Navbar() {
 						{/* Desktop CTA */}
 						<div className="hidden lg:flex items-center gap-4">
 							<a
-								href={SOCIAL_LINKS.whatsapp}
+								href={links.whatsapp}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="btn-whatsapp text-sm px-6 py-2.5"
@@ -148,7 +150,7 @@ export default function Navbar() {
 						{/* CTA Button */}
 						<div className="mt-8">
 							<a
-								href={SOCIAL_LINKS.whatsapp}
+								href={links.whatsapp}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="btn-whatsapp w-full justify-center"
@@ -162,15 +164,15 @@ export default function Navbar() {
 						<div className="mt-auto pt-8">
 							<div className="border-t border-gold/10 pt-6 space-y-3">
 								<a
-									href={`tel:${STUDIO_INFO.phone}`}
+									href={`tel:${settings.studio.phone}`}
 									className="flex items-center gap-3 text-sm text-muted hover:text-gold transition-colors"
 								>
 									<Phone size={14} className="text-gold/50" />
-									{STUDIO_INFO.phone}
+									{settings.studio.phone}
 								</a>
 								<div className="flex items-center gap-3 text-sm text-muted">
 									<MapPin size={14} className="text-gold/50 flex-shrink-0" />
-									{STUDIO_INFO.location}
+									{settings.studio.location}
 								</div>
 							</div>
 						</div>

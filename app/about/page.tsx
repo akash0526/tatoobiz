@@ -3,8 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 
 export default function AboutPage() {
+  const { settings } = useSiteSettings();
   return (
     <div>
       {/* Header */}
@@ -20,9 +22,9 @@ export default function AboutPage() {
       <div className="section bg-black">
         <div className="container-custom max-w-3xl">
           <div className="prose prose-invert max-w-none font-body-serif text-xl leading-tight tracking-[-0.2px] text-cream/90">
-            <p>Tattoo Biz Butwal was founded in 2016 by Bijay with a simple vision: to create a space where sacred art and personal expression meet on the skin.</p>
+            <p>{settings.about.paragraph1}</p>
             
-            <p className="mt-7">What started as a small studio in B.P. Chowk has grown into one of Nepal’s most respected tattoo destinations — known for its dedication to hygiene, artistry, and respect for traditional and spiritual iconography.</p>
+            <p className="mt-7">{settings.about.paragraph2}</p>
           </div>
         </div>
       </div>

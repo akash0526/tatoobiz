@@ -3,9 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Phone } from 'lucide-react';
-import { STUDIO_INFO, SOCIAL_LINKS } from '@/lib/constants';
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 
 export default function Hero() {
+  const { settings, links } = useSiteSettings();
   return (
     <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden pt-10">
       {/* Background with Mandala Overlay */}
@@ -19,7 +20,7 @@ export default function Hero() {
         <div className="max-w-4xl mx-auto">
           {/* Greeting */}
           <div className="inline-block px-5 py-1.5 rounded-full border border-gold/30 mb-6 text-xs tracking-[3px] text-gold">
-            नमस्ते · EST. {STUDIO_INFO.founded}
+            नमस्ते · EST. {settings.studio.founded}
           </div>
 
           {/* Main Title */}
@@ -31,13 +32,13 @@ export default function Hero() {
 
           {/* Tagline */}
           <p className="max-w-lg mx-auto text-xl md:text-2xl text-cream/90 font-body-serif tracking-tight mb-10">
-            {STUDIO_INFO.tagline}
+            {settings.studio.tagline}
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a 
-              href={SOCIAL_LINKS.whatsapp} 
+              href={links.whatsapp} 
               target="_blank" 
               rel="noopener noreferrer"
               className="btn-whatsapp px-10 py-4 text-base flex items-center gap-3 group"
@@ -55,10 +56,10 @@ export default function Hero() {
 
           {/* Trust Bar */}
           <div className="mt-16 flex flex-wrap justify-center gap-x-10 gap-y-3 text-xs uppercase tracking-[2.5px] text-cream/60">
-            <div>{STUDIO_INFO.years} YEARS</div>
-            <div>{STUDIO_INFO.clients} CLIENTS</div>
-            <div>{STUDIO_INFO.googleRating}★ GOOGLE</div>
-            <div>{STUDIO_INFO.artists} ARTISTS</div>
+            <div>{settings.stats.years} YEARS</div>
+            <div>{settings.stats.clients} CLIENTS</div>
+            <div>{settings.stats.googleRating}★ GOOGLE</div>
+            <div>{settings.stats.artists} ARTISTS</div>
           </div>
         </div>
       </div>

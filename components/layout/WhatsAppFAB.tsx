@@ -1,12 +1,13 @@
 'use client';
 
-import { SOCIAL_LINKS, STUDIO_INFO } from '@/lib/constants';
+import { useSiteSettings } from '@/components/providers/SiteSettingsProvider';
 import { MessageCircle } from 'lucide-react';
 
 export default function WhatsAppFAB() {
+  const { links } = useSiteSettings();
   return (
     <a
-      href={SOCIAL_LINKS.whatsapp}
+      href={links.whatsapp}
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-[#25D366] text-white px-5 py-3.5 rounded-2xl shadow-2xl hover:bg-[#1da851] active:scale-[0.985] transition-all duration-200 group"

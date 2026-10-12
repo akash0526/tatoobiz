@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Check, X, Star } from 'lucide-react';
+import { Check, X, Star, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
 
@@ -46,6 +46,26 @@ export default function TestimonialsManager() {
     }
   };
 
+  const [showNew, setShowNew] = useState(false);
+  const emptyReview = { client_name: '', rating: 5, review_text: '', tattoo_type: '', is_approved: true };
+  const [newReview, setNewReview] = useState(emptyReview);
+
+  const addTestimonial = async () => {
+    if (!newReview.client_name.trim() || !newReview.review_text.trim()) {
+      toast.error('Client name and review text are required');
+      return;
+    }
+    const { error } = await supabase.from('testimonials').insert([{ ...newReview, rating: Number(newReview.rating) }]);
+    if (!error) {
+      toast.success('Review added');
+      setNewReview(emptyReview);
+      setShowNew(false);
+      fetchTestimonials();
+    } else {
+      toast.error('Failed to add review');
+    }
+  };
+
   const deleteTestimonial = async (id: string) => {
     if (!confirm('Delete this review?')) return;
 
@@ -69,6 +89,43 @@ export default function TestimonialsManager() {
       <div className="mb-8">
         <div className="section-label">REVIEWS</div>
         <h1 className="font-heading text-5xl tracking-[-2px]">Testimonials</h1>
+      </div>
+
+      <div className="mb-6">
+        {!showNew ? (
+          <button onClick={() => setShowNew(true)} className="btn-gold px-5 py-2 flex items-center gap-2 text-sm">
+            <Plus size={16} /> ADD REVIEW
+          </button>
+        ) : (
+          <div className="card-dark p-6 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="text-xs text-gold tracking-wider">CLIENT NAME</label>
+                <input value={newReview.client_name} onChange={e => setNewReview({ ...newReview, client_name: e.target.value })} className="input-dark mt-1" placeholder="Priya S." />
+              </div>
+              <div>
+                <label className="text-xs text-gold tracking-wider">RATING (1–5)</label>
+                <input type="number" min={1} max={5} value={newReview.rating} onChange={e => setNewReview({ ...newReview, rating: Number(e.target.value) })} className="input-dark mt-1" />
+              </div>
+              <div>
+                <label className="text-xs text-gold tracking-wider">TATTOO TYPE</label>
+                <input value={newReview.tattoo_type} onChange={e => setNewReview({ ...newReview, tattoo_type: e.target.value })} className="input-dark mt-1" placeholder="Mandala Sleeve" />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-gold tracking-wider">REVIEW</label>
+              <textarea value={newReview.review_text} onChange={e => setNewReview({ ...newReview, review_text: e.target.value })} className="input-dark mt-1" rows={3} />
+            </div>
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={newReview.is_approved} onChange={e => setNewReview({ ...newReview, is_approved: e.target.checked })} />
+              Publish on the website immediately
+            </label>
+            <div className="flex gap-3">
+              <button onClick={addTestimonial} className="btn-gold px-6 py-2 text-sm">SAVE</button>
+              <button onClick={() => { setShowNew(false); setNewReview(emptyReview); }} className="btn-outline-gold px-6 py-2 text-sm">CANCEL</button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="space-y-4">
